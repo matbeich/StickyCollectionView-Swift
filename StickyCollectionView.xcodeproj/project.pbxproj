@@ -146,7 +146,7 @@
 				B287CE151C6104AC00B0ED82 /* CornerCollectionViewCell.swift */,
 				B287CE171C6104B200B0ED82 /* PrimerCollectionViewCell.swift */,
 			);
-			name = Cells;
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
