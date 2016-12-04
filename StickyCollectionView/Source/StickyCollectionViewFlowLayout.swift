@@ -12,11 +12,11 @@ class StickyCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
     var firstItemTransform: CGFloat?
     
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        let items = NSArray (array: super.layoutAttributesForElementsInRect(rect)!, copyItems: true)
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        let items = NSArray (array: super.layoutAttributesForElements(in: rect)!, copyItems: true)
         var headerAttributes: UICollectionViewLayoutAttributes?
         
-        items.enumerateObjectsUsingBlock { (object, idex, stop) -> Void in
+        items.enumerateObjects(using: { (object, idex, stop) -> Void in
             let attributes = object as! UICollectionViewLayoutAttributes
             
             if attributes.representedElementKind == UICollectionElementKindSectionHeader {
@@ -25,25 +25,25 @@ class StickyCollectionViewFlowLayout: UICollectionViewFlowLayout {
             else {
                 self.updateCellAttributes(attributes, headerAttributes: headerAttributes)
             }
-        }
+        })
         return items as? [UICollectionViewLayoutAttributes]
     }
     
-    func updateCellAttributes(attributes: UICollectionViewLayoutAttributes, headerAttributes: UICollectionViewLayoutAttributes?) {
-        let minY = CGRectGetMinY(collectionView!.bounds) + collectionView!.contentInset.top
+    func updateCellAttributes(_ attributes: UICollectionViewLayoutAttributes, headerAttributes: UICollectionViewLayoutAttributes?) {
+        let minY = collectionView!.bounds.minY + collectionView!.contentInset.top
         var maxY = attributes.frame.origin.y
         
         if let headerAttributes = headerAttributes {
-            maxY -= CGRectGetHeight(headerAttributes.bounds)
+            maxY -= headerAttributes.bounds.height
         }
         
         let finalY = max(minY, maxY)
         var origin = attributes.frame.origin
-        let deltaY = (finalY - origin.y) / CGRectGetHeight(attributes.frame)
+        let deltaY = (finalY - origin.y) / attributes.frame.height
         
         if let itemTransform = firstItemTransform {
             let scale = 1 - deltaY * itemTransform
-            attributes.transform = CGAffineTransformMakeScale(scale, scale)
+            attributes.transform = CGAffineTransform(scaleX: scale, y: scale)
         }
         
         origin.y = finalY
@@ -51,7 +51,7 @@ class StickyCollectionViewFlowLayout: UICollectionViewFlowLayout {
         attributes.zIndex = attributes.indexPath.row
     }
     
-    override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return true
     }
 }
