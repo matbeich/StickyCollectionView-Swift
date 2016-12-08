@@ -8,8 +8,8 @@
 import UIKit
 
 extension UIColor {
-    public class func colorFromHexString(hexString: String) -> UIColor {
-        let colorString = hexString.stringByReplacingOccurrencesOfString("#", withString: "").uppercaseString
+    public class func colorFromHexString(_ hexString: String) -> UIColor {
+        let colorString = hexString.replacingOccurrences(of: "#", with: "").uppercased() as NSString
         let alpha, red, blue, green: Float
         alpha = 1.0
         red = self.colorComponentsFrom(colorString, start: 0, length: 2)
@@ -18,11 +18,11 @@ extension UIColor {
         return UIColor(colorLiteralRed: red, green: green, blue: blue, alpha: alpha)
     }
     
-    private class func colorComponentsFrom(string: NSString, start: Int, length: Int) -> Float {
+    fileprivate class func colorComponentsFrom(_ string: NSString, start: Int, length: Int) -> Float {
         NSMakeRange(start, length)
-        let subString = string.substringWithRange(NSMakeRange(start, length))
+        let subString = string.substring(with: NSMakeRange(start, length))
         var hexValue: UInt32 = 0
-        NSScanner(string: subString).scanHexInt(&hexValue)
+        Scanner(string: subString).scanHexInt32(&hexValue)
         return Float(hexValue) / 255.0
     }
 }

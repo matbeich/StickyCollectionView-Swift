@@ -21,12 +21,12 @@ class CustomizableButton: UIButton {
         layer.cornerRadius = cornerRadius
         
         if let color = borderColor {
-            layer.borderColor = color.CGColor
+            layer.borderColor = color.cgColor
         }
     }
     
-    override func intrinsicContentSize() -> CGSize {
-        var contentSize = super.intrinsicContentSize()
+    override var intrinsicContentSize : CGSize {
+        var contentSize = super.intrinsicContentSize
         contentSize.width += horizontalPadding * 2
         return contentSize
     }
