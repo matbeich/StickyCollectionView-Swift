@@ -1,5 +1,6 @@
 ## StickyCollectionView
 UICollectionView layout for presenting of the overlapping cells. [Objective-C version here](https://github.com/matbeich/StickyCollectionView)
+Swift 2.2 version.
 
 [Checkout demo](https://appetize.io/app/63y1wgk56p6c4h9zr5n6efy9wm?device=iphone5s&scale=75&orientation=portrait&osVersion=9.2)
 ## Overview
