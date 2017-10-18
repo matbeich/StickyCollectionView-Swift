@@ -11,6 +11,8 @@ import UIKit
 class StickyCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
     var firstItemTransform: CGFloat?
+    /** This property enables paging per card. The default value is false. */
+    public var isPagingEnabled: Bool = false
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let items = NSArray (array: super.layoutAttributesForElements(in: rect)!, copyItems: true)
@@ -53,5 +55,30 @@ class StickyCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return true
+    }
+    
+    // MARK: cell paging
+    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+        
+        // MARK: If the property `isPagingEnabled` is set to false, we don't enable paging and thus return the current contentoffset
+        guard isPagingEnabled else {
+            let latestOffset = super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
+            return latestOffset
+        }
+        
+        var offsetAdjustment = CGFloat.greatestFiniteMagnitude
+        let verticalOffset = proposedContentOffset.y
+        let contentInset = collectionView!.contentInset.top
+        
+        let targetRect = CGRect(origin: CGPoint(x: 0, y: verticalOffset), size: self.collectionView!.bounds.size)
+        
+        for layoutAttributes in super.layoutAttributesForElements(in: targetRect)! {
+            // MARK: we adjust for the contentInset
+            let itemOffset = layoutAttributes.frame.origin.y - contentInset
+            if (abs(itemOffset - verticalOffset) < abs(offsetAdjustment)) {
+                offsetAdjustment = itemOffset - verticalOffset
+            }
+        }
+        return CGPoint(x: proposedContentOffset.x, y: verticalOffset + offsetAdjustment)
     }
 }
